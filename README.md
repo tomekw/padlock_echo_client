@@ -1,5 +1,7 @@
 # Padlock Echo Client implementation
 
+[Padlock](https://github.com/tomekw/padlock) is LibreSSL's [libtls](https://man.openbsd.org/tls_init.3) in Ada.
+
 ## Status
 
 This is alpha software. I'm actively working it. YMMV.
