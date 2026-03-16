@@ -1,0 +1,4 @@
+.tada/
+target/
+padlock_echo_client_deps.gpr
+padlock_echo_client_tests_deps.gpr
