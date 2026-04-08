@@ -3,7 +3,7 @@ name = "padlock_echo_client"
 version = "0.1.0-dev"
 
 [dependencies]
-padlock = "0.1.0"
+padlock = "0.2.0"
 
 [dev-dependencies]
 testy = "0.1.0"
