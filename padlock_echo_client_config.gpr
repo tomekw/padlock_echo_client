@@ -4,28 +4,23 @@ abstract project Padlock_Echo_Client_Config is
    type Build_Profile_Kind is ("debug", "release");
    Build_Profile : Build_Profile_Kind := external ("BUILD_PROFILE", "debug");
 
-   type Tada_OS_Kind is ("linux", "windows", "macos", "unknown");
+   type Tada_OS_Kind is ("freebsd", "linux", "macos", "openbsd", "windows", "unknown");
    Tada_OS : Tada_OS_Kind := external ("TADA_OS", "unknown");
 
-   type Tada_Arch_Kind is ("x86_64", "aarch64", "unknown");
+   type Tada_Arch_Kind is ("aarch64", "x86_64", "unknown");
    Tada_Arch : Tada_Arch_Kind := external ("TADA_ARCH", "unknown");
 
-   Binder_Switches := ();
-   Common_Binder_Switches := ("-Es");
-   case Tada_OS is
-      when "windows" => Binder_Switches := Common_Binder_Switches & ("-static");
-      when others => Binder_Switches := Common_Binder_Switches;
-   end case;
+   Binder_Switches := ("-Es", "-static");
 
    Builder_Switches := ("-j0", "-s");
 
    Compiler_Switches := ();
-   Common_Compiler_Switches := ("-gnat2022", "-gnatwa", "-gnata", "-fstack-check", "-gnato", "-g");
+   Common_Compiler_Switches := ("-gnat2022", "-gnatwa", "-gnata", "-gnatX", "-fstack-check", "-gnato", "-g");
    Style_Switches := ("-gnatyaAbCdefhiklnOprStux");
    Debug_Switches := Common_Compiler_Switches & Style_Switches &
-     ("-O0", "-gnateE", "-gnatVa");
+                       ("-O0", "-gnateE", "-gnatVa");
    Release_Switches := Common_Compiler_Switches & Style_Switches &
-     ("-O2", "-gnatn", "-fdata-sections", "-ffunction-sections");
+                         ("-O2", "-gnatn", "-fdata-sections", "-ffunction-sections");
    case Build_Profile is
       when "debug" => Compiler_Switches := Debug_Switches;
       when "release" => Compiler_Switches := Release_Switches;
@@ -36,8 +31,10 @@ abstract project Padlock_Echo_Client_Config is
       when "debug" => Linker_Switches := ();
       when "release" =>
          case Tada_OS is
-            when "macos" => Linker_Switches := ("-Wl,-dead_strip");
+            when "freebsd" => Linker_Switches := ("-Wl,--gc-sections");
             when "linux" => Linker_Switches := ("-Wl,--gc-sections");
+            when "macos" => Linker_Switches := ("-Wl,-dead_strip");
+            when "openbsd" => Linker_Switches := ("-Wl,--gc-sections");
             when "windows" => Linker_Switches := ("-Wl,--gc-sections", "-static");
             when "unknown" => Linker_Switches := ();
          end case;
